@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f4f6f8; }
+        h1 { text-align: center; color: #333; }
+        .chart-container {
+            width: 80%;
+            margin: 40px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        canvas { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Employee Dashboard</h1>
+
+    <div class="chart-container">
+        <h2>Employees per Department</h2>
+        <canvas id="deptChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <h2>Average Performance per Department</h2>
+        <canvas id="perfChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <h2>Attendance Trend (Last 30 Days)</h2>
+        <canvas id="attendanceChart"></canvas>
+    </div>
+
+    <script>
+        // Single data object for all charts
+        const dashboardData = JSON.parse('{{ dashboard_data|safe|escapejs }}');
+
+        // Employee Count Bar Chart
+        new Chart(document.getElementById('deptChart'), {
+            type: 'bar',
+            data: {
+                labels: dashboardData.deptLabels,
+                datasets: [{
+                    label: 'Employee Count',
+                    data: dashboardData.deptCounts,
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: { responsive: true }
+        });
+
+        // Average Performance Line Chart
+        new Chart(document.getElementById('perfChart'), {
+            type: 'line',
+            data: {
+                labels: dashboardData.perfLabels,
+                datasets: [{
+                    label: 'Average Rating',
+                    data: dashboardData.perfAvg,
+                    backgroundColor: 'rgba(255, 99, 132, 0.3)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: { responsive: true }
+        });
+
+        // Attendance Trend Line Chart
+        new Chart(document.getElementById('attendanceChart'), {
+            type: 'line',
+            data: {
+                labels: dashboardData.attendanceLabels,
+                datasets: [{
+                    label: 'Present Employees',
+                    data: dashboardData.attendanceCounts,
+                    backgroundColor: 'rgba(75, 192, 192, 0.3)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    fill: true,
+                    tension: 0.2
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: { x: { ticks: { maxRotation: 90, minRotation: 45 } } }
+            }
+        });
+    </script>
+</body>
+</html>

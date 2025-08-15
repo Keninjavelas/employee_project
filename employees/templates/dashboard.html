@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Employee Dashboard</h1>
+
+    <!-- Employees per Department -->
+    <h2>Employees per Department</h2>
+    <canvas id="deptChart"></canvas>
+
+    <!-- Attendance Trend -->
+    <h2>Attendance Trend (Last 30 Days)</h2>
+    <canvas id="attendanceChart"></canvas>
+
+    <!-- Safely pass Django data to JS -->
+    {{ dashboard_data|json_script:"dashboard-data" }}
+
+    <script>
+        // Parse JSON safely from the template
+        const dashboardData = JSON.parse(document.getElementById('dashboard-data').textContent);
+
+        // Employees per Department Chart
+        new Chart(document.getElementById('deptChart'), {
+            type: 'bar',
+            data: {
+                labels: dashboardData.dept_labels,
+                datasets: [{
+                    label: 'Employee Count',
+                    data: dashboardData.dept_counts,
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: { responsive: true }
+        });
+
+        // Attendance Trend Chart
+        new Chart(document.getElementById('attendanceChart'), {
+            type: 'line',
+            data: {
+                labels: dashboardData.attendance_labels,
+                datasets: [{
+                    label: 'Present Employees',
+                    data: dashboardData.attendance_counts,
+                    backgroundColor: 'rgba(75, 192, 192, 0.4)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    fill: true,
+                    tension: 0.2
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { ticks: { maxRotation: 90, minRotation: 45 } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
