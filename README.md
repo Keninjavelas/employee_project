@@ -8,7 +8,7 @@ A Django-based application to manage employees, departments, and attendance with
 - Full CRUD for Employees and Departments
 - Attendance tracking with status options
 - Dashboard with interactive charts (Chart.js)
-- REST API endpoints using Django REST Framework
+- REST API endpoints using Django REST Framework.
 
 ---
 
